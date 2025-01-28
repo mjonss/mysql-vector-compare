@@ -77,7 +77,7 @@ func main() {
 	}
 
 	toVecMap := make(map[string]string)
-	for _, toVec := range []string{"STRING_TO_VECTOR", "TO_VECTOR", "VEC_FromText", "MYVECTOR_COSTRUCT", "VEC_FROM_TEXT"} {
+	for _, toVec := range []string{"STRING_TO_VECTOR", "TO_VECTOR", "VEC_FromText", "MYVECTOR_CONSTRUCT", "VEC_FROM_TEXT"} {
 		for _, cdb := range dbs {
 			_, err = cdb.Exec(fmt.Sprintf("INSERT INTO vt (v, note) VALUES (%s('[1.1,2.2,3.3]'), '%s')", toVec, toVec))
 			if err != nil {
@@ -145,7 +145,7 @@ func main() {
 	}
 
 	fromVecMap := make(map[string]string)
-	for _, fromVec := range []string{"VECTOR_TO_STRING", "FROM_VECTOR", "VEC_ToText", "MYVECTOR_DISPLAY", "VEC_AS_TEXT", "HEX", "VECTOR_DIM", "VEC_DIMS"} {
+	for _, fromVec := range []string{"VECTOR_TO_STRING", "FROM_VECTOR", "VEC_ToText", "MYVECTOR_DISPLAY", "VEC_AS_TEXT", "HEX", "VECTOR_DIM", "VEC_DIMS", "VEC_L2_NORM"} {
 		for _, cdb := range dbs {
 			rs, err := cdb.Query(fmt.Sprintf("SELECT id, %s(v) FROM vt LIMIT 1", fromVec))
 			if err != nil {
@@ -166,4 +166,55 @@ func main() {
 			}
 		}
 	}
+
+	distTypes := []string{"COSINE", "EUCLIDEAN", "L2", "DOT", "IP"}
+	// "DISTANCE is documented for MySQL, but is not supported in Community or Enterprise version, only Heatwave.
+	for _, distFn := range []string{ /*"DISTANCE", */ "MYVECTOR_DISTANCE"} {
+		for _, distType := range distTypes {
+			for _, cdb := range dbs {
+				q := fmt.Sprintf("SELECT id, %s(v, %s('[1.0,1.0,1.0]'), '%s') as 'distance' FROM vt ORDER BY id ASC LIMIT 1", distFn, toVecMap[cdb.Name], distType)
+				rs, err := cdb.Query(q)
+				if err != nil {
+					fmt.Printf("%s:%s+%s not supported: %v\n", cdb.Name, distFn, distType, err)
+					continue
+				}
+				for rs.Next() {
+					var id int64
+					var d float64
+					err = rs.Scan(&id, &d)
+					if err != nil {
+						fmt.Printf("%s:%s+%s: Failed to fetch text vector from table: %v\n", cdb.Name, distFn, distType, err)
+						rs.Close()
+						break
+					}
+					fmt.Printf("%s:%s+%s returned %v\t%v\n", cdb.Name, distFn, distType, id, d)
+				}
+			}
+		}
+	}
+	for _, distFn := range []string{"VEC_NEGATIVE_INNER_PRODUCT", "VEC_L2_DISTANCE", "VEC_COSINE_DISTANCE", "VEC_DISTANCE_EUCLIDEAN", "VEC_DISTANCE_COSINE", "VEC_DISTANCE"} {
+		for _, cdb := range dbs {
+			q := fmt.Sprintf("SELECT id, %s(v, %s('[1.0,1.0,1.0]')) as 'distance' FROM vt ORDER BY id ASC LIMIT 1", distFn, toVecMap[cdb.Name])
+			rs, err := cdb.Query(q)
+			if err != nil {
+				fmt.Printf("%s:%s not supported: %v\n", cdb.Name, distFn, err)
+				continue
+			}
+			for rs.Next() {
+				var id int64
+				var d float64
+				err = rs.Scan(&id, &d)
+				if err != nil {
+					fmt.Printf("%s:%s: Failed to fetch text vector from table: %v\n", cdb.Name, distFn, err)
+					rs.Close()
+					break
+				}
+				fmt.Printf("%s:%s returned %v\t%v\n", cdb.Name, distFn, id, d)
+			}
+		}
+	}
+	// TODO: Create index and test:
+	// ORDER BY vec_dist_fn(v, vec) LIMIT 10;
+	// also when a matching row is inserted in the current non-committed transaction
+	// also when it is just committed by other transaction.
 }
