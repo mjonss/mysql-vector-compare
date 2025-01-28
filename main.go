@@ -102,7 +102,15 @@ func main() {
 		}
 	}
 
-	// Note: TiDB does not allow HEX(vector_column)!
+	for _, cdb := range dbs {
+		_, err = cdb.Exec(fmt.Sprintf("INSERT INTO vt (v, note) VALUES (x'CDCC8C3FCDCC0C4033335340', '%s')", "Hex"))
+		if err != nil {
+			log.Printf("%s: Failed to insert text vector by function (%s) into table: %v\n", cdb.Name, "Hex", err)
+		} else {
+			log.Printf("%s supports %s\n", cdb.Name, "Hex")
+		}
+	}
+
 	for _, cdb := range dbs {
 		rs, err := cdb.Query("SELECT id, v, note FROM vt")
 		if err != nil {
@@ -124,7 +132,7 @@ func main() {
 		}
 	}
 
-	for _, fromVec := range []string{"VECTOR_TO_STRING", "FROM_VECTOR", "VEC_ToText", "MYVECTOR_DISPLAY", "VEC_AS_TEXT"} {
+	for _, fromVec := range []string{"VECTOR_TO_STRING", "FROM_VECTOR", "VEC_ToText", "MYVECTOR_DISPLAY", "VEC_AS_TEXT", "HEX"} {
 		for _, cdb := range dbs {
 			rs, err := cdb.Query(fmt.Sprintf("SELECT id, %s(v) FROM vt LIMIT 1", fromVec))
 			if err != nil {
