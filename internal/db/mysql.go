@@ -3,10 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
-	"unsafe"
-
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 )
 
 type MySQLDB struct {
@@ -86,14 +84,6 @@ func (m *MySQLDB) SupportColumn(colDef string) bool {
 		log.Fatalf("Failed dropping test table vtWP: %v", err)
 	}
 	return true
-}
-
-func (m *MySQLDB) InsertVector(name string, vector []float32) error {
-	bytes := unsafe.Slice((*byte)(unsafe.Pointer(&vector[0])), len(vector)*4)
-	log.Print(bytes)
-	query := `INSERT INTO vt (v, note) VALUES (?, ?)`
-	_, err := m.db.Exec(query, bytes, name)
-	return err
 }
 
 func (m *MySQLDB) Close() error {
