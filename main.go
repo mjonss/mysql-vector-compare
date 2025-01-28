@@ -213,8 +213,11 @@ func main() {
 			}
 		}
 	}
+	// TODO: Check max dimensions?
+	// TODO: Check errors for different vector dimensions in distance func?
 	// TODO: Create index and test:
 	// ORDER BY vec_dist_fn(v, vec) LIMIT 10;
 	// also when a matching row is inserted in the current non-committed transaction
 	// also when it is just committed by other transaction.
+	
 }
