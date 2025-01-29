@@ -44,7 +44,8 @@ def generate_embeddings(text: str) -> List[float]:
     Returns a list of float values representing the embedding.
     """
     payload = {
-        "model": "snowflake-arctic-embed2",
+        #"model": "snowflake-arctic-embed2",
+        "model": "nomic-embed-text",
         "input": f"{text}",
     }
 
@@ -75,7 +76,7 @@ def store_embeddings(row_id: str, embedding: List[float]) -> None:
         emb_string = "[" + ",".join(map(str, embedding)) + "]"
         print(f"row_id: {row_id}")
         print(f"emb_string: {emb_string}")
-        update_query = f"UPDATE markdown_files SET embedding = VEC_FROM_TEXT('{emb_string}') WHERE id = {row_id}"
+        update_query = f"UPDATE markdown_files SET `nomic-embed-text` = VEC_FROM_TEXT('{emb_string}') WHERE id = {row_id}"
         print(f"query: {update_query}")
         cursor.execute(update_query)
         #cursor.execute(update_query, (emb_string, row_id))

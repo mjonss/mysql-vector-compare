@@ -219,5 +219,27 @@ func main() {
 	// ORDER BY vec_dist_fn(v, vec) LIMIT 10;
 	// also when a matching row is inserted in the current non-committed transaction
 	// also when it is just committed by other transaction.
-	
+	// Also check with EXPLAIN ANALYZE!
+
+	// Assume we have a table markdown_files:
+	//CREATE TABLE `markdown_files` (
+	//	`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+	//	`filename` varchar(255) DEFAULT NULL,
+	//	`content` text DEFAULT NULL,
+	//	`embedding` vector(1024) DEFAULT NULL,
+	//	PRIMARY KEY (`id`)
+	//)
+
+	/* TODO: complete this and do the same for TiDB
+	mariaDB.Exec("DROP TABLE IF EXISTS v")
+	mariaDB.Exec("CREATE TABLE v LIKE markdown_files")
+	mariaDB.Exec("ALTER TABLE v MODIFY embedding VECTOR(1024) NOT NULL")
+	mariaDB.Exec("INSERT INTO v SELECT * FROM markdown_files")
+	mariaDB.Exec("ALTER TABLE v ADD VECTOR INDEX vidx (embedding) distance=cosine")
+
+	mariaDB.Exec("BEGIN")
+	mariaDB.Exec("")
+	mariaDB.Exec("ROLLBACK")
+
+	*/
 }

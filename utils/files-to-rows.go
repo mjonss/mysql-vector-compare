@@ -32,7 +32,7 @@ func main() {
 	CREATE TABLE IF NOT EXISTS markdown_files (
 	    id bigint unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		filename VARCHAR(255),
-		content TEXT
+		content MEDIUMTEXT
 	)`
 	if _, err := db.Exec(createTableSQL); err != nil {
 		log.Fatalf("Error creating table: %v\n", err)
