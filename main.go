@@ -167,6 +167,39 @@ func main() {
 		}
 	}
 
+	for _, cdb := range dbs {
+		rs, err := cdb.Query(fmt.Sprintf("SELECT id, CAST(v AS CHAR) FROM vt LIMIT 1"))
+		if err != nil {
+			fmt.Printf("%s:%s not supported: %v\n", cdb.Name, "CAST AS CHAR", err)
+			continue
+		}
+		for rs.Next() {
+			var id int64
+			var vec string
+			err = rs.Scan(&id, &vec)
+			if err != nil {
+				log.Fatalf("%s: Failed to fetch text vector from table: %v\n", cdb.Name, err)
+			}
+			fmt.Printf("%s:%s returned %v\t%v\n", cdb.Name, "CAST AS CHAR", id, vec)
+		}
+	}
+	for _, cdb := range dbs {
+		rs, err := cdb.Query("SELECT CAST('[1.1,2.2,3.3]' AS VECTOR)")
+		if err != nil {
+			fmt.Printf("%s:%s not supported: %v\n", cdb.Name, "CAST AS VECTOR", err)
+			continue
+		}
+		for rs.Next() {
+			// Should really be []float32?
+			var vec string
+			err = rs.Scan(&vec)
+			if err != nil {
+				log.Fatalf("%s: Failed to fetch text vector from table: %v\n", cdb.Name, err)
+			}
+			fmt.Printf("%s:%s returned %v\n", cdb.Name, "CAST AS VECTOR", vec)
+		}
+	}
+
 	distTypes := []string{"COSINE", "EUCLIDEAN", "L2", "DOT", "IP"}
 	// "DISTANCE is documented for MySQL, but is not supported in Community or Enterprise version, only Heatwave.
 	for _, distFn := range []string{ /*"DISTANCE", */ "MYVECTOR_DISTANCE"} {

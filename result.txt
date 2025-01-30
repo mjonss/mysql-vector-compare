@@ -1,0 +1,152 @@
+MySQL Version: 9.2.0
+MyVECTOR Version: 9.1.0
+TiDB Version: 8.0.11-TiDB-v8.5.1
+MariaDB Version: 11.7.1-MariaDB-ubu2404
+Feature	MySQL	MYVEC	MariaDB	TiDB
+VECTOR	YES	YES	NO	YES
+VECTOR()	NO	NO	NO	NO
+VECTOR(-1)	NO	NO	NO	NO
+VECTOR(0)	YES	YES	NO	YES
+VECTOR(1)	YES	YES	YES	YES
+VECTOR(5)	YES	YES	YES	YES
+mariadb:Binary ([205 204 140 63 205 204 12 64 51 51 83 64]) not supported: Error 1366 (22007): Incorrect vector value: '?̌???\000C@33S@' for column `vectortest`.`vt`.`v` at row 1
+tidb:Binary ([205 204 140 63 205 204 12 64 51 51 83 64]) not supported: Error 1105 (HY000): Invalid vector text: �̌?��@33S@
+mysql:STRING_TO_VECTOR supported
+myvec:STRING_TO_VECTOR supported
+mariadb:STRING_TO_VECTOR not supported: Error 1305 (42000): FUNCTION vectortest.STRING_TO_VECTOR does not exist
+tidb:STRING_TO_VECTOR not supported: Error 1305 (42000): FUNCTION vectortest.string_to_vector does not exist
+mysql:TO_VECTOR supported
+myvec:TO_VECTOR supported
+mariadb:TO_VECTOR not supported: Error 1305 (42000): FUNCTION vectortest.TO_VECTOR does not exist
+tidb:TO_VECTOR not supported: Error 1305 (42000): FUNCTION vectortest.to_vector does not exist
+mysql:VEC_FromText not supported: Error 1305 (42000): FUNCTION vectortest.VEC_FromText does not exist
+myvec:VEC_FromText not supported: Error 1305 (42000): FUNCTION vectortest.VEC_FromText does not exist
+mariadb:VEC_FromText supported
+tidb:VEC_FromText not supported: Error 1305 (42000): FUNCTION vectortest.vec_fromtext does not exist
+mysql:MYVECTOR_CONSTRUCT not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_CONSTRUCT does not exist
+myvec:MYVECTOR_CONSTRUCT supported
+mariadb:MYVECTOR_CONSTRUCT not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_CONSTRUCT does not exist
+tidb:MYVECTOR_CONSTRUCT not supported: Error 1305 (42000): FUNCTION vectortest.myvector_construct does not exist
+mysql:VEC_FROM_TEXT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_FROM_TEXT does not exist
+myvec:VEC_FROM_TEXT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_FROM_TEXT does not exist
+mariadb:VEC_FROM_TEXT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_FROM_TEXT does not exist
+tidb:VEC_FROM_TEXT supported
+mysql:Implicit not supported: Error 6136 (HY000): Value of type 'string, size: 13' cannot be converted to 'vector' type.
+myvec:Implicit not supported: Error 6136 (HY000): Value of type 'string, size: 13' cannot be converted to 'vector' type.
+mariadb:Implicit not supported: Error 1366 (22007): Incorrect vector value: '[1.1,2.2,3.3]' for column `vectortest`.`vt`.`v` at row 1
+tidb:Implicit supported
+mysql:Hex supported
+myvec:Hex supported
+mariadb:Hex supported
+tidb:Hex not supported: Error 1105 (HY000): cannot convert datum from bit/hex literal to type vector
+mysql is supporting less dim!
+mysql not supporting more dim: Error 1406 (22001): Data too long for column 'v' at row 1
+myvec is supporting less dim!
+myvec not supporting more dim: Error 1406 (22001): Data too long for column 'v' at row 1
+mariadb not supporting less dim: Error 1366 (22007): Incorrect vector value: '\xCD\xCC\x8C?\xCD\xCC\x0C@' for column `vectortest`.`vt`.`v` at row 1
+mariadb not supporting more dim: Error 1366 (22007): Incorrect vector value: '\xCD\xCC\x8C?\xCD\xCC\x0C@33S@\xCD\xCC\x8C@' for column `vectortest`.`vt`.`v` at row 1
+tidb not supporting less dim: Error 1105 (HY000): vector has 2 dimensions, does not fit VECTOR(3)
+tidb not supporting more dim: Error 1105 (HY000): vector has 4 dimensions, does not fit VECTOR(3)
+mysql returned 1	[205 204 140 63 205 204 12 64 51 51 83 64]	[3]float32 ()
+mysql returned 2	[205 204 140 63 205 204 12 64 51 51 83 64]	STRING_TO_VECTOR ()
+mysql returned 3	[205 204 140 63 205 204 12 64 51 51 83 64]	TO_VECTOR ()
+mysql returned 4	[205 204 140 63 205 204 12 64 51 51 83 64]	Hex ()
+mysql returned 5	[205 204 140 63 205 204 12 64]	short ()
+myvec returned 1	[205 204 140 63 205 204 12 64 51 51 83 64]	[3]float32 ()
+myvec returned 2	[205 204 140 63 205 204 12 64 51 51 83 64]	STRING_TO_VECTOR ()
+myvec returned 3	[205 204 140 63 205 204 12 64 51 51 83 64]	TO_VECTOR ()
+myvec returned 4	[205 204 140 63 205 204 12 64 51 51 83 64]	MYVECTOR_CONSTRUCT ()
+myvec returned 5	[205 204 140 63 205 204 12 64 51 51 83 64]	Hex ()
+myvec returned 6	[205 204 140 63 205 204 12 64]	short ()
+mariadb returned 1	[205 204 140 63 205 204 12 64 51 51 83 64]	VEC_FromText ()
+mariadb returned 2	[205 204 140 63 205 204 12 64 51 51 83 64]	Hex ()
+tidb returned 1	[91 49 46 49 44 50 46 50 44 51 46 51 93]	VEC_FROM_TEXT ([1.1,2.2,3.3])
+tidb returned 2	[91 49 46 49 44 50 46 50 44 51 46 51 93]	Implicit ([1.1,2.2,3.3])
+mysql:VECTOR_TO_STRING returned 1	[1.10000e+00,2.20000e+00,3.30000e+00]
+myvec:VECTOR_TO_STRING returned 1	[1.10000e+00,2.20000e+00,3.30000e+00]
+mariadb:VECTOR_TO_STRING not supported: Error 1305 (42000): FUNCTION vectortest.VECTOR_TO_STRING does not exist
+tidb:VECTOR_TO_STRING not supported: Error 1305 (42000): FUNCTION vectortest.vector_to_string does not exist
+mysql:FROM_VECTOR returned 1	[1.10000e+00,2.20000e+00,3.30000e+00]
+myvec:FROM_VECTOR returned 1	[1.10000e+00,2.20000e+00,3.30000e+00]
+mariadb:FROM_VECTOR not supported: Error 1305 (42000): FUNCTION vectortest.FROM_VECTOR does not exist
+tidb:FROM_VECTOR not supported: Error 1305 (42000): FUNCTION vectortest.from_vector does not exist
+mysql:VEC_ToText not supported: Error 1305 (42000): FUNCTION vectortest.VEC_ToText does not exist
+myvec:VEC_ToText not supported: Error 1305 (42000): FUNCTION vectortest.VEC_ToText does not exist
+mariadb:VEC_ToText returned 1	[1.1,2.2,3.3]
+tidb:VEC_ToText not supported: Error 1305 (42000): FUNCTION vectortest.vec_totext does not exist
+mysql:MYVECTOR_DISPLAY not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISPLAY does not exist
+myvec:MYVECTOR_DISPLAY returned 1	[1.1, 2.2, 3.3]
+mariadb:MYVECTOR_DISPLAY not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISPLAY does not exist
+tidb:MYVECTOR_DISPLAY not supported: Error 1305 (42000): FUNCTION vectortest.myvector_display does not exist
+mysql:VEC_AS_TEXT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_AS_TEXT does not exist
+myvec:VEC_AS_TEXT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_AS_TEXT does not exist
+mariadb:VEC_AS_TEXT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_AS_TEXT does not exist
+tidb:VEC_AS_TEXT returned 1	[1.1,2.2,3.3]
+mysql:HEX returned 1	CDCC8C3FCDCC0C4033335340
+myvec:HEX returned 1	CDCC8C3FCDCC0C4033335340
+mariadb:HEX returned 1	CDCC8C3FCDCC0C4033335340
+tidb:HEX not supported: Error 1105 (HY000): Hex invalid args, need int or string but get *types.FieldType
+mysql:VECTOR_DIM returned 1	3
+myvec:VECTOR_DIM returned 1	3
+mariadb:VECTOR_DIM not supported: Error 1305 (42000): FUNCTION vectortest.VECTOR_DIM does not exist
+tidb:VECTOR_DIM not supported: Error 1305 (42000): FUNCTION vectortest.vector_dim does not exist
+mysql:VEC_DIMS not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DIMS does not exist
+myvec:VEC_DIMS not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DIMS does not exist
+mariadb:VEC_DIMS not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DIMS does not exist
+tidb:VEC_DIMS returned 1	3
+mysql:VEC_L2_NORM not supported: Error 1305 (42000): FUNCTION vectortest.VEC_L2_NORM does not exist
+myvec:VEC_L2_NORM not supported: Error 1305 (42000): FUNCTION vectortest.VEC_L2_NORM does not exist
+mariadb:VEC_L2_NORM not supported: Error 1305 (42000): FUNCTION vectortest.VEC_L2_NORM does not exist
+tidb:VEC_L2_NORM returned 1	4.115823119079332
+mysql:CAST AS CHAR not supported: Error 1210 (HY000): Incorrect arguments to cast_as_char
+myvec:CAST AS CHAR not supported: Error 1210 (HY000): Incorrect arguments to cast_as_char
+mariadb:CAST AS CHAR not supported: Error 4079 (HY000): Illegal parameter data type vector for operation 'cast_as_char'
+tidb:CAST AS CHAR returned 1	[1.1,2.2,3.3]
+mysql:CAST AS VECTOR not supported: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VECTOR)' at line 1
+myvec:CAST AS VECTOR not supported: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VECTOR)' at line 1
+mariadb:CAST AS VECTOR not supported: Error 4162 (HY000): Operator does not exist: 'CAST(expr AS vector)'
+tidb:CAST AS VECTOR returned [1.1,2.2,3.3]
+mysql:MYVECTOR_DISTANCE+COSINE not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+myvec:MYVECTOR_DISTANCE+COSINE returned 1	0.07417988541637877
+mariadb:MYVECTOR_DISTANCE+COSINE not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+tidb:MYVECTOR_DISTANCE+COSINE not supported: Error 1305 (42000): FUNCTION vectortest.myvector_distance does not exist
+mysql:MYVECTOR_DISTANCE+EUCLIDEAN not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+myvec:MYVECTOR_DISTANCE+EUCLIDEAN returned 1	6.739999771118164
+mariadb:MYVECTOR_DISTANCE+EUCLIDEAN not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+tidb:MYVECTOR_DISTANCE+EUCLIDEAN not supported: Error 1305 (42000): FUNCTION vectortest.myvector_distance does not exist
+mysql:MYVECTOR_DISTANCE+L2 not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+myvec:MYVECTOR_DISTANCE+L2 returned 1	6.739999771118164
+mariadb:MYVECTOR_DISTANCE+L2 not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+tidb:MYVECTOR_DISTANCE+L2 not supported: Error 1305 (42000): FUNCTION vectortest.myvector_distance does not exist
+mysql:MYVECTOR_DISTANCE+DOT not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+myvec:MYVECTOR_DISTANCE+DOT: Failed to fetch text vector from table: sql: Scan error on column index 1, name "distance": converting NULL to float64 is unsupported
+mariadb:MYVECTOR_DISTANCE+DOT not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+tidb:MYVECTOR_DISTANCE+DOT not supported: Error 1305 (42000): FUNCTION vectortest.myvector_distance does not exist
+mysql:MYVECTOR_DISTANCE+IP not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+myvec:MYVECTOR_DISTANCE+IP returned 1	-5.600000381469727
+mariadb:MYVECTOR_DISTANCE+IP not supported: Error 1305 (42000): FUNCTION vectortest.MYVECTOR_DISTANCE does not exist
+tidb:MYVECTOR_DISTANCE+IP not supported: Error 1305 (42000): FUNCTION vectortest.myvector_distance does not exist
+mysql:VEC_NEGATIVE_INNER_PRODUCT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_NEGATIVE_INNER_PRODUCT does not exist
+myvec:VEC_NEGATIVE_INNER_PRODUCT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_NEGATIVE_INNER_PRODUCT does not exist
+mariadb:VEC_NEGATIVE_INNER_PRODUCT not supported: Error 1305 (42000): FUNCTION vectortest.VEC_NEGATIVE_INNER_PRODUCT does not exist
+tidb:VEC_NEGATIVE_INNER_PRODUCT returned 1	-6.600000381469727
+mysql:VEC_L2_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_L2_DISTANCE does not exist
+myvec:VEC_L2_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_L2_DISTANCE does not exist
+mariadb:VEC_L2_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_L2_DISTANCE does not exist
+tidb:VEC_L2_DISTANCE returned 1	2.596150953068439
+mysql:VEC_COSINE_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_COSINE_DISTANCE does not exist
+myvec:VEC_COSINE_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_COSINE_DISTANCE does not exist
+mariadb:VEC_COSINE_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_COSINE_DISTANCE does not exist
+tidb:VEC_COSINE_DISTANCE returned 1	0.07417986131038679
+mysql:VEC_DISTANCE_EUCLIDEAN not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DISTANCE_EUCLIDEAN does not exist
+myvec:VEC_DISTANCE_EUCLIDEAN not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DISTANCE_EUCLIDEAN does not exist
+mariadb:VEC_DISTANCE_EUCLIDEAN returned 1	2.5961510016766325
+tidb:VEC_DISTANCE_EUCLIDEAN not supported: Error 1305 (42000): FUNCTION vectortest.vec_distance_euclidean does not exist
+mysql:VEC_DISTANCE_COSINE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DISTANCE_COSINE does not exist
+myvec:VEC_DISTANCE_COSINE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DISTANCE_COSINE does not exist
+mariadb:VEC_DISTANCE_COSINE returned 1	0.07417988541637877
+tidb:VEC_DISTANCE_COSINE not supported: Error 1305 (42000): FUNCTION vectortest.vec_distance_cosine does not exist
+mysql:VEC_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DISTANCE does not exist
+myvec:VEC_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DISTANCE does not exist
+mariadb:VEC_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.VEC_DISTANCE does not exist
+tidb:VEC_DISTANCE not supported: Error 1305 (42000): FUNCTION vectortest.vec_distance does not exist
